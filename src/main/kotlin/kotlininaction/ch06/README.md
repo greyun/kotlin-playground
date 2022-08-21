@@ -120,3 +120,49 @@ if (person != null) sendEmailTo(person.name)
 ```
 
 ### 6.1.8 프로퍼티 초기화 지연: lateinit
+
+테스트 작성 시 보통 setUp() 함수를 통해 의존성을 세팅하기에 nullable 타입으로 변수를 작성하면 매번 `!!`연산자를 붙여야해서 번거롭다.
+```
+class MyService {
+    fun performAction(): String = "foo"
+}
+class MyTest {
+    private var myService: MyService? = null // null 초기화를 위해 nullable 프로퍼티를 선언해야한다.
+    
+    @Before fun setUp() {
+        myService = MyService()
+    }
+    
+    @Test fun testAction() {
+        Assert.assertEquals("foo",
+            myService!!.performAction()) // 반드시 !!나 ?를 써야한다.
+    }
+}
+```
+
+`lateinit`을 사용하면 myService 프로퍼티를 not-null 타입으로 선언하며 지연 초기화 할 수 있다.
+```
+class MyService {
+    fun performAction(): String = "foo"
+}
+class MyTest {
+    private lateinit var myService: MyService // 초기화하지 않고 not-null 프로퍼티 선언
+    
+    @Before fun setUp() {
+        myService = MyService()
+    }
+    
+    @Test fun testAction() {
+        Assert.assertEquals("foo",
+            myService.performAction())
+    }
+}
+```
+
+## 6.2 코틀린의 원시 타입
+
+이 장의 내용
+- Int, Boolean, Any 타입에 대한 설명
+- Object, Void 등 자바 타입과 코틀린 타입 간 대응 관계
+
+### 
